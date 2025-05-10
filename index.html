@@ -74,6 +74,11 @@
             background-color: #3A80D2;
         }
 
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         .error-message {
             color: #e74c3c;
             font-size: 0.9rem;
@@ -156,7 +161,7 @@
         </form>
 
         <div id="successMessage" class="success-message">
-            Password has been reset successfully!
+            Password has been reset successfully! You can now log in on the app.
         </div>
 
         <div id="apiError" class="error-message" style="text-align: center; margin-top: 1rem;"></div>
@@ -307,17 +312,29 @@
                         resetButton.disabled = false;
 
                         if (data.error) {
-                            // Show API error
+                            // Display specific error message from API
                             showError(apiError, data.error);
+
+                            // If the API provides field-specific errors, display them in appropriate places
+                            if (data.details) {
+                                if (data.details.email) {
+                                    showError(emailError, data.details.email);
+                                }
+                                if (data.details.new_password) {
+                                    showError(passwordError, data.details.new_password);
+                                }
+                                if (data.details.confirm_password) {
+                                    showError(confirmError, data.details.confirm_password);
+                                }
+                            }
+                        } else if (data.message) {
+                            // Some APIs return errors in a message field
+                            showError(apiError, data.message);
                         } else if (data.success) {
                             // Show success message
                             form.style.display = 'none';
+                            successMessage.textContent = 'Password has been reset successfully! You can now log in on the app.';
                             successMessage.style.display = 'block';
-
-                            // Redirect to login page after 3 seconds
-                            setTimeout(function () {
-                                window.location.href = '/login';
-                            }, 3000);
                         }
                     })
                     .catch(error => {
@@ -325,8 +342,9 @@
                         spinner.style.display = 'none';
                         resetButton.disabled = false;
 
-                        // Show general error
-                        showError(apiError, 'An error occurred. Please try again later.');
+                        // Show error from catch block with more detail if available
+                        const errorMessage = error.message || 'An error occurred. Please try again later.';
+                        showError(apiError, 'Connection error: ' + errorMessage);
                         console.error('Error:', error);
                     });
             });
