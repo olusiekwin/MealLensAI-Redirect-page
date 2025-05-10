@@ -167,6 +167,9 @@
         <div id="apiError" class="error-message" style="text-align: center; margin-top: 1rem;"></div>
     </div>
 
+    <!-- ✅ Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('passwordResetForm');
@@ -178,175 +181,108 @@
             const successMessage = document.getElementById('successMessage');
             const apiError = document.getElementById('apiError');
 
-            // Error message elements
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
             const confirmError = document.getElementById('confirmError');
 
-            // Function to show error message
             function showError(element, message) {
                 element.textContent = message;
                 element.style.display = 'block';
             }
 
-            // Function to hide error message
             function hideError(element) {
                 element.textContent = '';
                 element.style.display = 'none';
             }
 
-            // Function to validate email format
             function isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             }
 
-            // Function to validate password
             function isValidPassword(password) {
                 return password.length >= 8;
             }
 
-            // Real-time validation for email
-            emailInput.addEventListener('input', function () {
-                if (this.value.trim() !== '' && !isValidEmail(this.value)) {
+            emailInput.addEventListener('input', () => {
+                if (emailInput.value.trim() && !isValidEmail(emailInput.value)) {
                     showError(emailError, 'Please enter a valid email address');
                 } else {
                     hideError(emailError);
                 }
             });
 
-            // Real-time validation for password
-            newPasswordInput.addEventListener('input', function () {
-                if (this.value.trim() !== '' && !isValidPassword(this.value)) {
+            newPasswordInput.addEventListener('input', () => {
+                if (!isValidPassword(newPasswordInput.value)) {
                     showError(passwordError, 'Password must be at least 8 characters long');
                 } else {
                     hideError(passwordError);
                 }
 
-                // Check if confirm password matches
-                if (confirmPasswordInput.value.trim() !== '' && this.value !== confirmPasswordInput.value) {
-                    showError(confirmError, 'Passwords don\'t match');
-                } else if (confirmPasswordInput.value.trim() !== '') {
-                    hideError(confirmError);
-                }
-            });
-
-            // Real-time validation for confirm password
-            confirmPasswordInput.addEventListener('input', function () {
-                if (this.value !== newPasswordInput.value) {
+                if (confirmPasswordInput.value && newPasswordInput.value !== confirmPasswordInput.value) {
                     showError(confirmError, 'Passwords don\'t match');
                 } else {
                     hideError(confirmError);
                 }
             });
 
-            // Form submission handler
-            form.addEventListener('submit', function (e) {
+            confirmPasswordInput.addEventListener('input', () => {
+                if (confirmPasswordInput.value !== newPasswordInput.value) {
+                    showError(confirmError, 'Passwords don\'t match');
+                } else {
+                    hideError(confirmError);
+                }
+            });
+
+            form.addEventListener('submit', async function (e) {
                 e.preventDefault();
-
-                // Reset error messages
-                hideError(emailError);
-                hideError(passwordError);
-                hideError(confirmError);
-                hideError(apiError);
-
-                // Hide success message
+                hideError(emailError); hideError(passwordError); hideError(confirmError); hideError(apiError);
                 successMessage.style.display = 'none';
 
-                // Validate email
                 const email = emailInput.value.trim();
-                if (!email) {
-                    showError(emailError, 'Email is required');
-                    return;
-                }
-                if (!isValidEmail(email)) {
-                    showError(emailError, 'Please enter a valid email address');
-                    return;
-                }
-
-                // Validate new password
                 const newPassword = newPasswordInput.value;
-                if (!newPassword) {
-                    showError(passwordError, 'New password is required');
-                    return;
-                }
-                if (!isValidPassword(newPassword)) {
-                    showError(passwordError, 'Password must be at least 8 characters long');
-                    return;
-                }
-
-                // Validate confirm password
                 const confirmPassword = confirmPasswordInput.value;
-                if (!confirmPassword) {
-                    showError(confirmError, 'Please confirm your password');
-                    return;
-                }
-                if (newPassword !== confirmPassword) {
-                    showError(confirmError, 'Passwords don\'t match');
-                    return;
-                }
 
-                // Show loading spinner
+                if (!email) return showError(emailError, 'Email is required');
+                if (!isValidEmail(email)) return showError(emailError, 'Please enter a valid email address');
+                if (!newPassword) return showError(passwordError, 'New password is required');
+                if (!isValidPassword(newPassword)) return showError(passwordError, 'Password must be at least 8 characters long');
+                if (!confirmPassword) return showError(confirmError, 'Please confirm your password');
+                if (newPassword !== confirmPassword) return showError(confirmError, 'Passwords don\'t match');
+
                 spinner.style.display = 'block';
                 resetButton.disabled = true;
 
-                // Prepare data for API request
-                const requestData = {
-                    email: email,
-                    new_password: newPassword,
-                    confirm_password: confirmPassword
-                };
-
-                // Send API request
-                fetch('https://meallensai-backend.onrender.com/api/v1/auth/reset-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Hide loading spinner
-                        spinner.style.display = 'none';
-                        resetButton.disabled = false;
-
-                        if (data.error) {
-                            // Display specific error message from API
-                            showError(apiError, data.error);
-
-                            // If the API provides field-specific errors, display them in appropriate places
-                            if (data.details) {
-                                if (data.details.email) {
-                                    showError(emailError, data.details.email);
-                                }
-                                if (data.details.new_password) {
-                                    showError(passwordError, data.details.new_password);
-                                }
-                                if (data.details.confirm_password) {
-                                    showError(confirmError, data.details.confirm_password);
-                                }
-                            }
-                        } else if (data.message) {
-                            // Some APIs return errors in a message field
-                            showError(apiError, data.message);
-                        } else if (data.success) {
-                            // Show success message
-                            form.style.display = 'none';
-                            successMessage.textContent = 'Password has been reset successfully! You can now log in on the app.';
-                            successMessage.style.display = 'block';
-                        }
-                    })
-                    .catch(error => {
-                        // Hide loading spinner
-                        spinner.style.display = 'none';
-                        resetButton.disabled = false;
-
-                        // Show error from catch block with more detail if available
-                        const errorMessage = error.message || 'An error occurred. Please try again later.';
-                        showError(apiError, 'Connection error: ' + errorMessage);
-                        console.error('Error:', error);
+                try {
+                    const response = await axios.post('https://meallensai-backend.onrender.com/api/v1/auth/reset-password', {
+                        email: email,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
                     });
+
+                    spinner.style.display = 'none';
+                    resetButton.disabled = false;
+
+                    const data = response.data;
+
+                    if (data.error || data.message) {
+                        showError(apiError, data.error || data.message);
+                        if (data.details) {
+                            if (data.details.email) showError(emailError, data.details.email);
+                            if (data.details.new_password) showError(passwordError, data.details.new_password);
+                            if (data.details.confirm_password) showError(confirmError, data.details.confirm_password);
+                        }
+                    } else if (data.success) {
+                        form.style.display = 'none';
+                        successMessage.textContent = 'Password has been reset successfully! You can now log in on the app.';
+                        successMessage.style.display = 'block';
+                    }
+
+                } catch (error) {
+                    spinner.style.display = 'none';
+                    resetButton.disabled = false;
+                    showError(apiError, 'Connection error: ' + (error.response?.data?.message || error.message));
+                    console.error(error);
+                }
             });
         });
     </script>
