@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Management</title>
+    <title>Password Reset</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -126,47 +126,13 @@
         .button-text {
             margin-left: 8px;
         }
-
-        .option-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-        }
-
-        .option-button {
-            flex: 1;
-            text-align: center;
-            padding: 1rem;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-
-        .option-button:hover {
-            background-color: #e0e0e0;
-        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Account Management</h1>
-
-        <!-- Option buttons -->
-        <div id="optionsContainer" class="option-buttons">
-            <div id="verifyEmailBtn" class="option-button">Verify Email</div>
-            <div id="resetPasswordBtn" class="option-button">Reset Password</div>
-        </div>
-
-        <!-- Email verification success message -->
-        <div id="emailVerifiedMessage" class="success-message" style="display: none;">
-            Email verified successfully! You can now login.
-        </div>
-
-        <!-- Password reset form -->
-        <form id="passwordResetForm" style="display: none;">
+        <h1>Reset Your Password</h1>
+        <form id="passwordResetForm">
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" required>
@@ -206,10 +172,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const optionsContainer = document.getElementById('optionsContainer');
-            const verifyEmailBtn = document.getElementById('verifyEmailBtn');
-            const resetPasswordBtn = document.getElementById('resetPasswordBtn');
-            const emailVerifiedMessage = document.getElementById('emailVerifiedMessage');
             const form = document.getElementById('passwordResetForm');
             const emailInput = document.getElementById('email');
             const newPasswordInput = document.getElementById('newPassword');
@@ -222,21 +184,6 @@
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
             const confirmError = document.getElementById('confirmError');
-
-            // Initially hide the success message
-            successMessage.style.display = 'none';
-
-            // Handle verify email button click
-            verifyEmailBtn.addEventListener('click', function () {
-                optionsContainer.style.display = 'none';
-                emailVerifiedMessage.style.display = 'block';
-            });
-
-            // Handle reset password button click
-            resetPasswordBtn.addEventListener('click', function () {
-                optionsContainer.style.display = 'none';
-                form.style.display = 'block';
-            });
 
             function showError(element, message) {
                 element.textContent = message;
