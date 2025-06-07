@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Management</title>
+    <title>Account Management - MealLensAI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -20,7 +20,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
             padding: 1rem;
         }
 
@@ -43,17 +43,62 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
             border-radius: 20px 20px 0 0;
         }
 
-        h1 {
-            color: #1a202c;
+        .header {
             text-align: center;
             margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .logo h1 {
+            color: #1a202c;
             font-size: 2rem;
             font-weight: 700;
             letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .logo a:hover {
+            color: #f7931e;
+        }
+
+        .tagline {
+            color: #4a5568;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 107, 53, 0.05);
+            border-radius: 12px;
+            border-left: 3px solid #ff6b35;
+        }
+
+        .tagline strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: #1a202c;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            margin-bottom: 1.5rem;
         }
 
         .form-group {
@@ -83,8 +128,8 @@
 
         input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
             transform: translateY(-1px);
         }
 
@@ -92,8 +137,12 @@
             border-color: #d1d5db;
         }
 
+        input::placeholder {
+            color: #9ca3af;
+        }
+
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -125,7 +174,7 @@
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
         }
 
         button:active {
@@ -253,7 +302,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
             opacity: 0;
             transition: opacity 0.2s ease;
         }
@@ -266,8 +315,8 @@
 
         .option-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
         }
 
         .option-button:hover::before {
@@ -309,6 +358,40 @@
             box-shadow: none;
         }
 
+        .email-verified {
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .email-verified .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+            font-weight: 300;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .email-verified h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .email-verified p {
+            font-size: 1rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
         /* Responsive design */
         @media (max-width: 480px) {
             .container {
@@ -316,7 +399,7 @@
                 margin: 1rem;
             }
 
-            h1 {
+            .logo h1 {
                 font-size: 1.75rem;
             }
 
@@ -328,13 +411,18 @@
             .option-button {
                 padding: 1rem;
             }
+
+            .tagline {
+                font-size: 0.8rem;
+                padding: 0.75rem;
+            }
         }
 
         /* Focus styles for accessibility */
         .option-button:focus,
         button:focus,
         input:focus {
-            outline: 2px solid #667eea;
+            outline: 2px solid #ff6b35;
             outline-offset: 2px;
         }
 
@@ -353,7 +441,19 @@
     <div class="container">
         <button class="back-button" id="backButton" style="display: none;">←</button>
         
-        <h1>Account Management</h1>
+        <div class="header">
+            <div class="logo">
+                <h1>MealLensAI</h1>
+                <a href="https://meallensai.com" target="_blank">Visit meallensai.com</a>
+            </div>
+            
+            <div class="tagline">
+                <strong>Discover Meals with MealLensAI</strong><br>
+                MealLensAI is your smart kitchen assistant. Snap a picture of your ingredients or a meal, and let AI guide you with recipes, cooking tips, and personalized suggestions. You can also take a picture of a prepared meal, and let AI guide you with detailed cooking instructions, provide a list of ingredients used, a step-by-step guide to recreate the dish, and online resources for preparing the meal. Simplify meal prep like never before!
+            </div>
+        </div>
+
+        <h2>Account Management</h2>
 
         <!-- Option buttons -->
         <div id="optionsContainer" class="option-buttons">
@@ -366,8 +466,10 @@
         </div>
 
         <!-- Email verification success message -->
-        <div id="emailVerifiedMessage" class="success-message" style="display: none;">
-            ✓ Email verified successfully! You can now login.
+        <div id="emailVerifiedMessage" class="email-verified" style="display: none;">
+            <div class="checkmark">✓</div>
+            <h3>Email Verified Successfully!</h3>
+            <p>Your email has been verified. You can now login to your MealLensAI account and start discovering amazing meals.</p>
         </div>
 
         <!-- Password reset form -->
@@ -400,7 +502,7 @@
         </form>
 
         <div id="successMessage" class="success-message" style="display: none;">
-            ✓ Password has been reset successfully! You can now log in on the app.
+            ✓ Password has been reset successfully! You can now log in to MealLensAI with your new password.
         </div>
 
         <div id="apiError" class="error-message" style="text-align: center; margin-top: 1rem;"></div>
