@@ -5,106 +5,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem;
         }
 
         .container {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 20px 20px 0 0;
         }
 
         h1 {
-            color: #333;
+            color: #1a202c;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-weight: 500;
-            color: #333;
+            color: #374151;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
         }
 
         input {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: all 0.2s ease;
+            background: #fff;
+            font-family: inherit;
         }
 
         input:focus {
             outline: none;
-            border-color: #4A90E2;
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        input:hover {
+            border-color: #d1d5db;
         }
 
         button {
-            background-color: #4A90E2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 0.75rem;
+            border-radius: 12px;
+            padding: 1rem;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
             margin-top: 1rem;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
         }
 
         button:hover {
-            background-color: #3A80D2;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         button:disabled {
-            background-color: #ccc;
+            background: #9ca3af;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button:disabled::before {
+            display: none;
         }
 
         .error-message {
-            color: #e74c3c;
-            font-size: 0.9rem;
+            color: #ef4444;
+            font-size: 0.875rem;
             margin-top: 0.5rem;
             display: none;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
         }
 
         .success-message {
-            color: #2ecc71;
-            font-size: 0.9rem;
+            color: #10b981;
+            font-size: 1rem;
             text-align: center;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             display: none;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         .password-requirements {
             font-size: 0.8rem;
-            color: #666;
-            margin-top: 0.25rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            font-weight: 400;
         }
 
         .spinner {
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, .3);
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
@@ -117,10 +190,34 @@
             }
         }
 
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         .button-content {
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            z-index: 1;
         }
 
         .button-text {
@@ -128,61 +225,169 @@
         }
 
         .option-buttons {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .option-button {
-            flex: 1;
             text-align: center;
-            padding: 1rem;
-            background-color: #f0f0f0;
-            border-radius: 4px;
+            padding: 1.25rem 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            color: #475569;
+        }
+
+        .option-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .option-button span {
+            position: relative;
+            z-index: 1;
+            transition: color 0.2s ease;
         }
 
         .option-button:hover {
-            background-color: #e0e0e0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .option-button:hover::before {
+            opacity: 1;
+        }
+
+        .option-button:hover span {
+            color: white;
+        }
+
+        .option-button:active {
+            transform: translateY(-1px);
+        }
+
+        .form-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 1.5rem;
+            width: auto;
+            margin: 0;
+        }
+
+        .back-button:hover {
+            background: rgba(107, 114, 128, 0.1);
+            color: #374151;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .option-buttons {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .option-button {
+                padding: 1rem;
+            }
+        }
+
+        /* Focus styles for accessibility */
+        .option-button:focus,
+        button:focus,
+        input:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .loading .button-text {
+            opacity: 0;
+        }
+
+        .loading .spinner {
+            display: block;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <button class="back-button" id="backButton" style="display: none;">←</button>
+        
         <h1>Account Management</h1>
 
         <!-- Option buttons -->
         <div id="optionsContainer" class="option-buttons">
-            <div id="verifyEmailBtn" class="option-button">Verify Email</div>
-            <div id="resetPasswordBtn" class="option-button">Reset Password</div>
+            <div id="verifyEmailBtn" class="option-button">
+                <span>Verify Email</span>
+            </div>
+            <div id="resetPasswordBtn" class="option-button">
+                <span>Reset Password</span>
+            </div>
         </div>
 
         <!-- Email verification success message -->
         <div id="emailVerifiedMessage" class="success-message" style="display: none;">
-            Email verified successfully! You can now login.
+            ✓ Email verified successfully! You can now login.
         </div>
 
         <!-- Password reset form -->
-        <form id="passwordResetForm" style="display: none;">
+        <form id="passwordResetForm" class="form-container" style="display: none;">
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
                 <div id="emailError" class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <label for="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="new_password" required>
+                <input type="password" id="newPassword" name="new_password" required placeholder="Enter new password">
                 <p class="password-requirements">Password must be at least 8 characters long</p>
                 <div id="passwordError" class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirm_password" required>
+                <input type="password" id="confirmPassword" name="confirm_password" required placeholder="Confirm your password">
                 <div id="confirmError" class="error-message"></div>
             </div>
 
@@ -195,13 +400,13 @@
         </form>
 
         <div id="successMessage" class="success-message" style="display: none;">
-            Password has been reset successfully! You can now log in on the app.
+            ✓ Password has been reset successfully! You can now log in on the app.
         </div>
 
         <div id="apiError" class="error-message" style="text-align: center; margin-top: 1rem;"></div>
     </div>
 
-    <!-- ✅ Axios CDN -->
+    <!-- Axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
@@ -218,6 +423,7 @@
             const spinner = document.getElementById('spinner');
             const successMessage = document.getElementById('successMessage');
             const apiError = document.getElementById('apiError');
+            const backButton = document.getElementById('backButton');
 
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
@@ -226,16 +432,34 @@
             // Initially hide the success message
             successMessage.style.display = 'none';
 
+            // Back button functionality
+            backButton.addEventListener('click', function () {
+                optionsContainer.style.display = 'grid';
+                form.style.display = 'none';
+                emailVerifiedMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                backButton.style.display = 'none';
+                hideError(apiError);
+                
+                // Reset form
+                form.reset();
+                hideError(emailError);
+                hideError(passwordError);
+                hideError(confirmError);
+            });
+
             // Handle verify email button click
             verifyEmailBtn.addEventListener('click', function () {
                 optionsContainer.style.display = 'none';
                 emailVerifiedMessage.style.display = 'block';
+                backButton.style.display = 'block';
             });
 
             // Handle reset password button click
             resetPasswordBtn.addEventListener('click', function () {
                 optionsContainer.style.display = 'none';
                 form.style.display = 'block';
+                backButton.style.display = 'block';
             });
 
             function showError(element, message) {
@@ -256,6 +480,7 @@
                 return password.length >= 8;
             }
 
+            // Real-time validation
             emailInput.addEventListener('input', () => {
                 if (emailInput.value.trim() && !isValidEmail(emailInput.value)) {
                     showError(emailError, 'Please enter a valid email address');
@@ -265,7 +490,7 @@
             });
 
             newPasswordInput.addEventListener('input', () => {
-                if (!isValidPassword(newPasswordInput.value)) {
+                if (newPasswordInput.value && !isValidPassword(newPasswordInput.value)) {
                     showError(passwordError, 'Password must be at least 8 characters long');
                 } else {
                     hideError(passwordError);
@@ -273,13 +498,13 @@
 
                 if (confirmPasswordInput.value && newPasswordInput.value !== confirmPasswordInput.value) {
                     showError(confirmError, 'Passwords don\'t match');
-                } else {
+                } else if (confirmPasswordInput.value) {
                     hideError(confirmError);
                 }
             });
 
             confirmPasswordInput.addEventListener('input', () => {
-                if (confirmPasswordInput.value !== newPasswordInput.value) {
+                if (confirmPasswordInput.value && confirmPasswordInput.value !== newPasswordInput.value) {
                     showError(confirmError, 'Passwords don\'t match');
                 } else {
                     hideError(confirmError);
@@ -288,21 +513,49 @@
 
             form.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                hideError(emailError); hideError(passwordError); hideError(confirmError); hideError(apiError);
+                
+                // Clear all errors
+                hideError(emailError);
+                hideError(passwordError);
+                hideError(confirmError);
+                hideError(apiError);
                 successMessage.style.display = 'none';
 
                 const email = emailInput.value.trim();
                 const newPassword = newPasswordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
 
-                if (!email) return showError(emailError, 'Email is required');
-                if (!isValidEmail(email)) return showError(emailError, 'Please enter a valid email address');
-                if (!newPassword) return showError(passwordError, 'New password is required');
-                if (!isValidPassword(newPassword)) return showError(passwordError, 'Password must be at least 8 characters long');
-                if (!confirmPassword) return showError(confirmError, 'Please confirm your password');
-                if (newPassword !== confirmPassword) return showError(confirmError, 'Passwords don\'t match');
+                // Validation
+                let hasErrors = false;
 
-                spinner.style.display = 'block';
+                if (!email) {
+                    showError(emailError, 'Email is required');
+                    hasErrors = true;
+                } else if (!isValidEmail(email)) {
+                    showError(emailError, 'Please enter a valid email address');
+                    hasErrors = true;
+                }
+
+                if (!newPassword) {
+                    showError(passwordError, 'New password is required');
+                    hasErrors = true;
+                } else if (!isValidPassword(newPassword)) {
+                    showError(passwordError, 'Password must be at least 8 characters long');
+                    hasErrors = true;
+                }
+
+                if (!confirmPassword) {
+                    showError(confirmError, 'Please confirm your password');
+                    hasErrors = true;
+                } else if (newPassword !== confirmPassword) {
+                    showError(confirmError, 'Passwords don\'t match');
+                    hasErrors = true;
+                }
+
+                if (hasErrors) return;
+
+                // Show loading state
+                resetButton.classList.add('loading');
                 resetButton.disabled = true;
 
                 try {
@@ -311,9 +564,6 @@
                         new_password: newPassword,
                         confirm_password: confirmPassword
                     });
-
-                    spinner.style.display = 'none';
-                    resetButton.disabled = false;
 
                     const data = response.data;
 
@@ -326,15 +576,24 @@
                         }
                     } else if (data.success) {
                         form.style.display = 'none';
-                        successMessage.textContent = 'Password has been reset successfully! You can now log in on the app.';
                         successMessage.style.display = 'block';
                     }
 
                 } catch (error) {
-                    spinner.style.display = 'none';
+                    let errorMessage = 'Connection error occurred';
+                    
+                    if (error.response?.data?.message) {
+                        errorMessage = error.response.data.message;
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
+                    
+                    showError(apiError, errorMessage);
+                    console.error('Reset password error:', error);
+                } finally {
+                    // Hide loading state
+                    resetButton.classList.remove('loading');
                     resetButton.disabled = false;
-                    showError(apiError, 'Connection error: ' + (error.response?.data?.message || error.message));
-                    console.error(error);
                 }
             });
         });
